@@ -79,3 +79,16 @@ $ php artisan make:test MembersRepositoryInterfaceTest --unit
 
 テスト実行
 $ php artisan test
+
+Seederの生成 ※Seederの中からFactoryを呼び出してもいいし、インスタンス生成コードを直接記述してもいい
+$ php artisan make:seeder MemberSeeder
+
+Factoryの生成 ※通常FactoryはSeederから呼び出される
+$ php artisan make:factory Member
+
+Seederの呼び出し
+$ php artisan db:seed
+$ php artisan db:seed --class=ExampleTableSeeder
+
+DB内のスキーマから作り直し＋Seeder呼び出し
+$ php artisan migrate:fresh --seed

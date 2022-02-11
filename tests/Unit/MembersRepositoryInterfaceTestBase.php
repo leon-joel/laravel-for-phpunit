@@ -16,7 +16,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
      * @group all
      */
     public function all_返り値は配列であること() {
-        $this->assertTrue(is_array($this->Members->all()));
+        $this->assertTrue(is_array($this->repo->all()));
     }
 
     /**
@@ -26,7 +26,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
      * @group all
      */
     public function all_必要なフィールドが取得されている事() {
-        $data = $this->Members->all();
+        $data = $this->repo->all();
 
         $expected = [
             'id', 'name', 'created_at', 'updated_at'
@@ -42,8 +42,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
      * @group get
      */
     public function get_返り値は配列であること() {
-        // eval(\Psy\sh());
-        $this->assertTrue(is_array($this->Members->get(1)));
+        $this->assertTrue(is_array($this->repo->get(1)));
     }
 
     /**
@@ -53,7 +52,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
      * @group get
      */
     public function get_必要なフィールドが取得されている事() {
-        $data = $this->Members->get(1);
+        $data = $this->repo->get(1);
 
         $expected = [
             'id', 'name', 'created_at', 'updated_at'
@@ -71,7 +70,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
     public function insert_登録処理が成功する事を検証() {
         $name = 'member_011';
 
-        $this->Members->insert($name);
+        $this->repo->insert($name);
 
         $this->assertDatabaseHas('members', [
             'name' => $name
@@ -87,7 +86,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
      */
     public function insert_空文字が渡ってきた場合には例外を投げる事() {
         // ※例外は飛ばない
-        $this->Members->insert('');
+        $this->repo->insert('');
     }
 
     /**
@@ -100,7 +99,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
         $id = 1;
         $name = 'MEMBER_1';
 
-        $this->Members->update($id, $name);
+        $this->repo->update($id, $name);
 
         $this->assertDatabaseHas('members', [
             'id' => $id,
@@ -117,7 +116,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
      */
     public function update_空文字が渡ってきた場合には例外を投げる事() {
         // ※例外は飛ばない
-        $this->Members->update(1, '');
+        $this->repo->update(1, '');
     }
 
     /**
@@ -129,7 +128,7 @@ class MembersRepositoryInterfaceTestBase extends TestCase {
     public function delete_削除処理が成功する事を検証() {
         $id = 1;
 
-        $this->Members->delete($id);
+        $this->repo->delete($id);
 
         $this->assertDatabaseMissing('members', [
             'id' => $id

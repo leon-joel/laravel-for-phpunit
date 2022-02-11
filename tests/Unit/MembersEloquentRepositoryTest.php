@@ -5,13 +5,16 @@ namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Repositories\MembersEloquentRepository AS Members;
+use App\Repositories\MembersEloquentRepository AS MembersRepository;
+
+// use function PHPUnit\Framework\assertEquals;
 
 class MembersEloquentRepositoryTest extends MembersRepositoryInterfaceTestBase
 {
+    // テストごとに Migration & Reset が実行される
     use RefreshDatabase;
 
-    protected $Members;
+    protected $repo;
 
     protected function setUp(): void
     {
@@ -19,22 +22,21 @@ class MembersEloquentRepositoryTest extends MembersRepositoryInterfaceTestBase
 
         $this->seed('MembersTableSeeder');
 
-        $this->Members = new Members();
+        $this->repo = new MembersRepository();
     }
 
-    protected function tearDown(): void
+    // protected function tearDown(): void
+    // {
+    //     Artisan::call('migrate:refresh');
+    //     parent::tearDown();
+    // }
+
+    /** @test */
+    public function test_all()
     {
-        Artisan::call('migrate:refresh');
-        parent::tearDown();
+        $results = $this->repo->all();
+        $this->assertEquals(10, count($results));
+        $this->assertCount(10, $results);   // 上と同じ
     }
 
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
-    public function test_example()
-    {
-        $this->assertTrue(true);
-    }
 }
