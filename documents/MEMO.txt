@@ -73,3 +73,9 @@ $ php artisan make:model Member
 
 開発用サーバー起動
 $ php artisan serve --host=localhost --port=8000
+
+ユニットテストファイル追加
+$ php artisan make:test MembersRepositoryInterfaceTest --unit
+
+テスト実行
+$ php artisan test
