@@ -70,3 +70,6 @@ $ php artisan make:model Member
 
 ※VSCode拡張 MySQL でsqliteファイルを指定する場合、
   Choose database file ⇒ オプション ⇒ Format で ファイル を選択しないと、sqliteファイルを選択出来ない。
+
+開発用サーバー起動
+$ php artisan serve --host=localhost --port=8000
