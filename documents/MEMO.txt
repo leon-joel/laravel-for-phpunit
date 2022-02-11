@@ -1,0 +1,72 @@
+macOS Mojave 10.14.6
+Intel Core i7
+Homebrew 3.3.14-42-g1aa0897
+----
+■PHPのローカルインストール
+
+参考:
+[phpenvでPHPのバージョンを切り替える](https://zenn.dev/takorice/articles/3ac4416778f796)
+[MacOS に anyenv + phpenv で PHP 7.4.1 をインストールする - Qiita](https://qiita.com/hamakou108/items/4744818dd166191c3e6b)
+
+
+PHPのビルド準備
+$ brew install bison re2c libxml2 zlib libzip bzip2 curl libiconv libedit pkg-config krb5 openssl@1.1 icu4c oniguruma tidy-html5
+
+$ phpenv install --list
+
+PHP7.4のビルド
+$ CC='/usr/bin/gcc' CXX='/usr/bin/g++' CXXFLAGS='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/' \
+CXXCPP='/Library/Developer/CommandLineTools/usr/bin/cpp -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/' \
+PHP_RPATHS="/usr/local/opt/bzip2/lib /usr/local/opt/libiconv/lib" \
+PKG_CONFIG_PATH="/usr/local/opt/krb5/lib/pkgconfig:/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/libedit/lib/pkgconfig:/usr/local/opt/libjpeg/lib/pkgconfig:/usr/local/opt/libpng/lib/pkgconfig:/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/libzip/lib/pkgconfig:/usr/local/opt/oniguruma/lib/pkgconfig:/usr/local/opt/openssl@1.1/lib/pkgconfig:/usr/local/opt/tidy-html5/lib/pkgconfig" \
+PHP_BUILD_CONFIGURE_OPTS="--with-bz2=/usr/local/opt/bzip2 --with-iconv=/usr/local/opt/libiconv" \
+phpenv install 7.4.27
+
+PHP8.1のビルド
+$ CC='/usr/bin/gcc' CXX='/usr/bin/g++' CXXFLAGS='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/' \
+CXXCPP='/Library/Developer/CommandLineTools/usr/bin/cpp -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/' \
+PKG_CONFIG_PATH="/usr/local/opt/krb5/lib/pkgconfig:/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/libedit/lib/pkgconfig:/usr/local/opt/libjpeg/lib/pkgconfig:/usr/local/opt/libpng/lib/pkgconfig:/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/libzip/lib/pkgconfig:/usr/local/opt/oniguruma/lib/pkgconfig:/usr/local/opt/openssl@1.1/lib/pkgconfig:/usr/local/opt/tidy-html5/lib/pkgconfig" \
+PHP_BUILD_CONFIGURE_OPTS="--with-bz2=/usr/local/opt/bzip2 --with-iconv=/usr/local/opt/libiconv" \
+phpenv install 8.1.2
+
+$ phpenv versions
+
+----
+
+■Laravelプロジェクトを始める
+
+$ mkdir laravel
+$ cd laravel
+$ phpenv local 7.4.27
+
+Composerのインストール ※https://getcomposer.org/download/
+$ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+$ php -r "if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+$ php composer-setup.php
+$ php -r "unlink('composer-setup.php');"
+
+プロジェクトを作る ※prefer-distはzipアーカイブ形式でダウンロードする
+$ php composer.phar create-project laravel/laravel laravel-for-phpunit --prefer-dist
+
+.envファイルの編集
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+
+dbファイルを作成 [sqliteの場合]
+$ touch database/database.sqlite
+
+以下 ⇒ https://www.ritolab.com/entry/167
+
+$ php artisan make:migration create_members_table  --create=members
+$ php artisan make:seeder MembersTableSeeder
+$ php artisan migrate
+
+$ composer dump-autoload
+
+$ php artisan migrate:refresh --seed
+
+$ php artisan make:model Member
+
+
+※VSCode拡張 MySQL でsqliteファイルを指定する場合、
+  Choose database file ⇒ オプション ⇒ Format で ファイル を選択しないと、sqliteファイルを選択出来ない。
